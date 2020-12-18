@@ -403,7 +403,7 @@ class ImageStackVisualizer(object):
     def _update(self, frame=0):
         self.ind = frame
         self.selection[self.stack_dim] = slice(frame, frame + 1)
-        self.img.set_data(self.dset[tuple(self.selection)].T)
+        self.img.set_data(np.squeeze(self.dset[tuple(self.selection)]).T)
         self.img.axes.figure.canvas.draw_idle()
 
 

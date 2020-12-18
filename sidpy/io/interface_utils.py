@@ -103,7 +103,7 @@ def openfile_dialog(file_types="All files (*)", multiple_files=False,
     # try to find a parent the file dialog can appear on top
     try:
         get_QT_app()
-    except:
+    except Exception:
         pass
 
     for param in [file_path, file_types, caption]:
@@ -117,18 +117,13 @@ def openfile_dialog(file_types="All files (*)", multiple_files=False,
         fnames, file_filter = func(parent, caption, file_path,
                                    filter=file_types,
                                    options=[QtCore.Qt.WindowStaysOnTopHint])
-        if len(fnames) > 0:
-            fname = fnames[0]
-        else:
+        if len(fnames) < 1:
             return
+        return fnames
     else:
         func = QtWidgets.QFileDialog.getOpenFileName
         fname, file_filter = func(parent, caption, file_path,
                                   filter=file_types)
-
-    if multiple_files:
-        return fnames
-    else:
         return str(fname)
 
 
@@ -178,7 +173,7 @@ def savefile_dialog(initial_file='*.hf5', file_path='.',
 
         try:
             get_QT_app()
-        except:
+        except Exception:
             pass
 
         func = QtWidgets.QFileDialog.getSaveFileName
@@ -203,9 +198,9 @@ try:
 
         def __init__(self, title=''):
             super().__init__()
-            self.initUI(title)
+            self.init_ui(title)
 
-        def initUI(self, title):
+        def init_ui(self, title):
             self.setWindowTitle('Progress Bar: ' + title)
             self.progress = QtWidgets.QProgressBar(self)
             self.progress.setGeometry(10, 10, 500, 50)
@@ -214,7 +209,6 @@ try:
 
         def set_value(self, count):
             self.progress.setValue(count)
-
 except ImportError:
     pass
 
@@ -239,10 +233,10 @@ def progress_bar(title='Progress', start=0, stop=100):
 
     Examples
     --------
-    >>> import sidpy
-    >>> progress = sidpy.interface_utils.progress_bar('progress', 1,50)
-    >>> for count in range(50):
-    >>>      progress.setValue(count)
+    >> import sidpy
+    >> progress = sidpy.interface_utils.progress_bar('progress', 1,50)
+    >> for count in range(50):
+    >>      progress.setValue(count)
     """
     # Check whether QT is available
     try:
@@ -252,10 +246,10 @@ def progress_bar(title='Progress', start=0, stop=100):
 
     try:
         get_QT_app()
-    except:
+    except Exception:
         pass
 
-    progress = QtWidgets.QProgressDialog(title, "Abort", 0, 100)
+    progress = QtWidgets.QProgressDialog(title, "Abort", start=start, stop=stop)
     progress.setWindowFlags(QtCore.Qt.WindowStaysOnTopHint)
     progress.show()
     return progress

@@ -18,13 +18,27 @@ if sys.version_info.major == 3:
 class TestFlattenDict(unittest.TestCase):
 
     def test_already_flat(self):
-        pass
+        test_dict = {'0': 0, '1': 1}
+        result_dict = flatten_dict(test_dict)
+        self.assertEqual(result_dict, test_dict)
+
 
     def test_two_level(self):
-        pass
+        test_dict = {'0': {'0':0, '1':1}, '1': {'0':0, '1':1}}
+        result_dict = flatten_dict(test_dict)
+        expected_dict = {'0-0':0, '0-1':1, '1-0':0, '1-1':1}
+        self.assertEqual(result_dict, expected_dict)
+
+
+
 
     def test_five_level(self):
-        pass
+        test_dict = {}
+        def new_dict(dictionary):
+            dictionary['0'] = {'0':0}
+            return dictionary['0']
+        for i in range(1,6):
+            test_dict = new_dict(test_dict)
 
     def test_non_str_keys(self):
         pass
